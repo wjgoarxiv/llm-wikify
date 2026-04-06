@@ -1,4 +1,4 @@
-<p align="center"><img src="./cover.png" width="100%" /></p>
+<p align="center"><img src="./llm-wikify/cover.png" width="100%" /></p>
 
 <h1 align="center">llm-wikify</h1>
 <p align="center">
@@ -73,10 +73,10 @@ Do **not** use it when you only need:
 Install the llm-wikify skill for me.
 1. git clone https://github.com/wjgoarxiv/llm-wikify /tmp/llm-wikify
 2. mkdir -p ~/.claude/skills/llm-wikify
-3. cp -r /tmp/llm-wikify/SKILL.md /tmp/llm-wikify/assets /tmp/llm-wikify/evals ~/.claude/skills/llm-wikify/
-4. cp /tmp/llm-wikify/generate_cover.sh ~/.claude/skills/llm-wikify/
+3. cp -r /tmp/llm-wikify/llm-wikify/SKILL.md /tmp/llm-wikify/llm-wikify/assets /tmp/llm-wikify/llm-wikify/evals ~/.claude/skills/llm-wikify/
+4. cp /tmp/llm-wikify/llm-wikify/generate_cover.sh ~/.claude/skills/llm-wikify/
 5. chmod +x ~/.claude/skills/llm-wikify/generate_cover.sh
-6. Test: test -f ~/.claude/skills/llm-wikify/SKILL.md && echo "OK: llm-wikify installed"
+6. test -f ~/.claude/skills/llm-wikify/SKILL.md && echo "OK: llm-wikify installed"
 7. Say "llm-wikify installed successfully"
 ```
 
@@ -178,18 +178,20 @@ It should not pass maintenance by producing neat-looking indexes and reports wit
 ## Repo Layout
 
 ```text
-llm-wikify/
-├── SKILL.md
+.
 ├── README.md
-├── cover.png
-├── generate_cover.sh
-├── assets/
-│   ├── home-template.md
-│   ├── maintenance-report-template.md
-│   ├── source-note-template.md
-│   └── wiki-rules-template.md
-└── evals/
-    └── evals.json
+├── README-ko.md
+└── llm-wikify/
+    ├── SKILL.md
+    ├── cover.png
+    ├── generate_cover.sh
+    ├── assets/
+    │   ├── home-template.md
+    │   ├── maintenance-report-template.md
+    │   ├── source-note-template.md
+    │   └── wiki-rules-template.md
+    └── evals/
+        └── evals.json
 ```
 
 ## Default Folder Contract for Wikified Projects
@@ -237,7 +239,7 @@ This skill is directly inspired by Karpathy’s `llm-wiki` idea: a persistent wi
 
 ## Validation
 
-The repo includes baseline pressure prompts in `evals/evals.json` covering three failure-prone modes:
+The repo includes baseline pressure prompts in `llm-wikify/evals/evals.json` covering three failure-prone modes:
 
 - bootstrap a local wiki from a messy repo
 - ingest mixed materials from `raw/`

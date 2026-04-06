@@ -1,4 +1,4 @@
-<p align="center"><img src="./cover.png" width="100%" /></p>
+<p align="center"><img src="./llm-wikify/cover.png" width="100%" /></p>
 
 <h1 align="center">llm-wikify</h1>
 <p align="center">
@@ -73,10 +73,10 @@ Karpathy의 핵심 통찰은 매우 강력합니다. 질문할 때마다 원문 
 llm-wikify 스킬을 설치해줘.
 1. git clone https://github.com/wjgoarxiv/llm-wikify /tmp/llm-wikify
 2. mkdir -p ~/.claude/skills/llm-wikify
-3. cp -r /tmp/llm-wikify/SKILL.md /tmp/llm-wikify/assets /tmp/llm-wikify/evals ~/.claude/skills/llm-wikify/
-4. cp /tmp/llm-wikify/generate_cover.sh ~/.claude/skills/llm-wikify/
+3. cp -r /tmp/llm-wikify/llm-wikify/SKILL.md /tmp/llm-wikify/llm-wikify/assets /tmp/llm-wikify/llm-wikify/evals ~/.claude/skills/llm-wikify/
+4. cp /tmp/llm-wikify/llm-wikify/generate_cover.sh ~/.claude/skills/llm-wikify/
 5. chmod +x ~/.claude/skills/llm-wikify/generate_cover.sh
-6. Test: test -f ~/.claude/skills/llm-wikify/SKILL.md && echo "OK: llm-wikify installed"
+6. test -f ~/.claude/skills/llm-wikify/SKILL.md && echo "OK: llm-wikify installed"
 7. "llm-wikify installed successfully"라고 말해줘
 ```
 
@@ -178,19 +178,20 @@ raw/ 안의 파일들을 이 프로젝트 위키로 인제스트해.
 ## 리포지토리 구성
 
 ```text
-llm-wikify/
-├── SKILL.md
+.
 ├── README.md
 ├── README-ko.md
-├── cover.png
-├── generate_cover.sh
-├── assets/
-│   ├── home-template.md
-│   ├── maintenance-report-template.md
-│   ├── source-note-template.md
-│   └── wiki-rules-template.md
-└── evals/
-    └── evals.json
+└── llm-wikify/
+    ├── SKILL.md
+    ├── cover.png
+    ├── generate_cover.sh
+    ├── assets/
+    │   ├── home-template.md
+    │   ├── maintenance-report-template.md
+    │   ├── source-note-template.md
+    │   └── wiki-rules-template.md
+    └── evals/
+        └── evals.json
 ```
 
 ## 위키화된 프로젝트의 기본 폴더 계약
@@ -238,7 +239,7 @@ log/
 
 ## 검증
 
-이 리포지토리에는 `evals/evals.json`에 세 가지 압박형 프롬프트가 들어 있습니다:
+이 리포지토리에는 `llm-wikify/evals/evals.json`에 세 가지 압박형 프롬프트가 들어 있습니다:
 
 - 지저분한 repo에서 로컬 위키를 부트스트랩하기
 - `raw/`의 혼합 자료를 인제스트하기
