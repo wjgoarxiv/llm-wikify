@@ -1,0 +1,49 @@
+{
+  "skill_name": "llm-wikify",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Treat my current working directory as a fresh mini LLM wiki for this project. There is no wiki structure yet. Create the smallest useful local wiki that helps a future agent understand this repo without turning it into a giant general knowledge base. First inspect what already exists here, then bootstrap a sensible wiki structure in-place, add a short home page, create a few focused topic pages tied to this repo’s actual contents, and add clear link paths between them. Don’t rewrite existing project docs unless needed, and don’t invent broad sections that aren’t grounded in this directory.",
+      "expected_output": "Creates a small, repo-local wiki structure grounded in actual project contents, with a home page and a few focused, linked pages rather than a giant universal wiki.",
+      "files": [],
+      "expectations": [
+        "Creates a task-local wiki structure instead of a universal second-brain layout",
+        "Keeps the bootstrap minimal rather than generating many speculative sections",
+        "Grounds pages in files or evidence already present in the working directory",
+        "Created pages identify what repo files, folders, or notes they were built from",
+        "Adds navigation or linking between created pages",
+        "Does not rewrite or duplicate existing docs unnecessarily",
+        "Does not create the full default folder tree unless the project actually needs it"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Inside this project, use the files under `raw/` as source material for the local wiki. Assume `raw/` may contain mixed notes, copied docs, transcripts, snippets, and partial references. Ingest them into a task-local wiki that preserves provenance. Summarize and reorganize the useful parts into clean wiki pages, keep track of where each claim came from, note uncertainty when a raw source is ambiguous, and avoid collapsing everything into one long dump page. If the current wiki structure is missing pieces needed for this ingestion, add only what is necessary.",
+      "expected_output": "Transforms mixed raw inputs into structured local wiki pages with provenance, scoped additions, and explicit uncertainty handling.",
+      "files": [],
+      "expectations": [
+        "Preserves provenance from raw sources rather than dropping source references",
+        "Separates raw-source material from generated wiki pages",
+        "Avoids one giant summary dump page",
+        "Notes ambiguity or conflicting information instead of presenting false certainty",
+        "Adds only the minimum missing structure needed for ingestion",
+        "Re-uses stable source-note paths instead of creating duplicates for the same source",
+        "Major sections can be traced back to a concrete source note, raw file, or evidence anchor"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Audit and maintain the wiki in my current working directory as a local project wiki, not a global second brain. Check for stale pages, broken links, orphan pages, duplicate topics, inconsistent naming, weak page summaries, and raw-ingestion leftovers that should be cleaned up. Then make targeted fixes, add a lightweight index only where it improves navigation, and leave a short maintenance report describing what changed and what still needs human review. Do not flatten the wiki into a single canonical document.",
+      "expected_output": "Performs targeted local-wiki maintenance, improves structure and navigation, and leaves a concise maintenance report with remaining review items.",
+      "files": [],
+      "expectations": [
+        "Treats the wiki as a local project artifact rather than a global vault",
+        "Finds structural issues such as orphan pages, duplicates, or inconsistent naming",
+        "Makes targeted fixes instead of flattening the wiki into one file",
+        "Uses an index or navigation aid only where it adds value",
+        "Leaves a maintenance report that distinguishes automatic fixes from human-review items",
+        "Does not solve maintenance by creating navigation theater without substantive cleanup"
+      ]
+    }
+  ]
+}
