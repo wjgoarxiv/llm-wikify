@@ -1,11 +1,11 @@
-<p align="center"><img src="./llm-wikify/cover.png" width="100%" /></p>
+<p align="center"><img src="./cover.png" width="100%" /></p>
 
 <h1 align="center">llm-wikify</h1>
 <p align="center">
   <em>Turn the current working directory into a small, compounding LLM wiki — without building a giant universal vault.</em>
 </p>
 <p align="center">
-  <a href="#when-to-use">When to Use</a> · <a href="#quick-start">Quick Start</a> · <a href="#features">Features</a> · <a href="#workflow">Workflow</a> · <a href="#repo-layout">Repo Layout</a> · <a href="./README-ko.md">한국어</a>
+  <a href="#novice-quickstart">Novice Quickstart</a> · <a href="#when-to-use">When to Use</a> · <a href="#features">Features</a> · <a href="#workflow">Workflow</a> · <a href="#repo-layout">Repo Layout</a> · <a href="./README-ko.md">한국어</a>
 </p>
 <p align="center">
   <img src="https://img.shields.io/badge/skill-local%20wiki-blueviolet" />
@@ -18,6 +18,44 @@
 
 > [!NOTE]
 > `llm-wikify` is inspired by Karpathy’s `llm-wiki` pattern, but optimized for **task-driven work**. Instead of forcing the model to constantly reason over one ever-growing mega-wiki, this skill treats the **current working directory as a mini wiki boundary**. New sources dropped into `raw/` get integrated into a small, local markdown knowledge base that stays useful for the project at hand.
+
+## Novice Quickstart
+
+If you do not know how the internals work yet, start with one plain request:
+
+```text
+Turn this folder into a maintained local wiki. Keep the setup simple and ask only what you need before starting.
+```
+
+The agent should ask at most three first-run questions:
+
+1. What should this wiki remember over time?
+2. What source material exists now, and what kind of sources will keep arriving?
+3. How autonomous should I be while organizing it?
+   - A) Do it and show results
+   - B) Show key takeaways before shaping
+   - C) Process one source at a time with review
+
+You do not need to know the internal folder names before the first useful result. After bootstrapping, start from `wiki/home.md`.
+
+If the folder is empty, choose a starter pack first:
+
+- personal knowledge
+- research/deep dive
+- project handoff
+- book/course notes
+- business/team wiki
+
+If there is still not enough seed material, answer this instead:
+
+```text
+Here are three things this wiki should remember first:
+1. ...
+2. ...
+3. ...
+```
+
+Advanced bridge/export and graph-style relationship maps are optional later layers. They are not required for first use, and external/global writes require explicit approval.
 
 ## Why this exists
 
@@ -44,6 +82,8 @@ That gives you a better default:
 - **Grounding requirement** — durable pages should say what repo landmarks, source notes, or raw inputs they were built from
 - **Idempotent ingest bias** — the same source should update stable notes and pages, not create duplicate wiki clutter
 - **Compound knowledge** — useful query answers can be filed back into the wiki instead of vanishing into chat history
+- **Bridge / promotion packets** — reusable local knowledge can be packaged for a global `llm-wiki` or cross-project map without silently breaking the local boundary
+- **Stronger health gates** — maintenance can check boundary, provenance, promotion, contradiction, taxonomy/schema drift, and source drift
 
 ## When to Use
 
@@ -64,17 +104,17 @@ Do **not** use it when you only need:
 
 ## Quick Start
 
-### 1. Quick Skill Installation for LLM
+### 1. Optional skill installation
 
 > [!TIP]
 > If your LLM agent can run shell commands, you can copy the block below, paste it into the chat, and let the agent install the skill automatically.
 
 ```text
 Install the llm-wikify skill for me.
-1. git clone https://github.com/wjgoarxiv/llm-wikify /tmp/llm-wikify
+1. git clone <repo-url> /tmp/llm-wikify
 2. mkdir -p ~/.claude/skills/llm-wikify
-3. cp -r /tmp/llm-wikify/llm-wikify/SKILL.md /tmp/llm-wikify/llm-wikify/assets /tmp/llm-wikify/llm-wikify/evals ~/.claude/skills/llm-wikify/
-4. cp /tmp/llm-wikify/llm-wikify/generate_cover.sh ~/.claude/skills/llm-wikify/
+3. cp -r /tmp/llm-wikify/SKILL.md /tmp/llm-wikify/assets /tmp/llm-wikify/evals ~/.claude/skills/llm-wikify/
+4. cp /tmp/llm-wikify/generate_cover.sh ~/.claude/skills/llm-wikify/
 5. chmod +x ~/.claude/skills/llm-wikify/generate_cover.sh
 6. test -f ~/.claude/skills/llm-wikify/SKILL.md && echo "OK: llm-wikify installed"
 7. Say "llm-wikify installed successfully"
@@ -86,7 +126,7 @@ For other tools, change the target skills path:
 - OpenCode: `~/.config/opencode/skills/llm-wikify/`
 - Gemini CLI: `~/.gemini/skills/llm-wikify/`
 
-### 2. Put source material in `raw/`
+### 2. Add source material when you have it
 
 Examples:
 
@@ -124,6 +164,7 @@ Over time, the agent should update:
 - `wiki/index.md`
 - topic pages
 - source notes
+- bridge/export packets when knowledge should be promoted
 - maintenance logs
 
 The raw material stays raw. The wiki becomes the maintained synthesis layer.
@@ -159,6 +200,20 @@ When the user asks a project question, the agent should:
 3. answer using the maintained wiki
 4. file durable analyses back into the wiki when they are worth keeping
 
+### Bridge / promote
+
+When local knowledge becomes useful outside the project, the agent should:
+
+1. keep the project wiki as the source of truth for local facts
+2. create a local `wiki/bridges/<slug>.md` export packet
+3. separate portable concepts from repo-specific details
+4. cite local topic/source/raw evidence
+5. ask for explicit approval before writing to any external wiki, vault, graph database, or another project
+
+### Optional graph / relationship lens
+
+After the local wiki has enough maintained pages, an agent may optionally generate graph-style relationship maps or reports inside the current working directory. This remains an advanced lens, not a required dependency or first-run concept. External graph databases or vault writes require explicit approval.
+
 ### Lint / maintain
 
 The skill should periodically check for:
@@ -179,19 +234,18 @@ It should not pass maintenance by producing neat-looking indexes and reports wit
 
 ```text
 .
+├── SKILL.md
 ├── README.md
 ├── README-ko.md
-└── llm-wikify/
-    ├── SKILL.md
-    ├── cover.png
-    ├── generate_cover.sh
-    ├── assets/
-    │   ├── home-template.md
-    │   ├── maintenance-report-template.md
-    │   ├── source-note-template.md
-    │   └── wiki-rules-template.md
-    └── evals/
-        └── evals.json
+├── cover.png
+├── generate_cover.sh
+├── assets/
+│   ├── home-template.md
+│   ├── maintenance-report-template.md
+│   ├── source-note-template.md
+│   └── wiki-rules-template.md
+└── evals/
+    └── evals.json
 ```
 
 ## Default Folder Contract for Wikified Projects
@@ -206,6 +260,7 @@ wiki/
   topics/
   entities/
   sources/
+  bridges/   # optional local export packets for global/cross-project promotion
 schema/
   wiki-rules.md
 log/
@@ -239,10 +294,17 @@ This skill is directly inspired by Karpathy’s `llm-wiki` idea: a persistent wi
 
 ## Validation
 
-The repo includes baseline pressure prompts in `llm-wikify/evals/evals.json` covering three failure-prone modes:
+The repo includes pressure prompts in `evals/evals.json` covering the main failure-prone modes:
 
-- bootstrap a local wiki from a messy repo
-- ingest mixed materials from `raw/`
-- maintain an evolving wiki without flattening it into one file
+- novice onboarding without exposing internals too early
+- empty-folder starter-pack flow
+- bootstrap of a local wiki from a messy repo
+- ingest of mixed materials from `raw/`
+- maintenance without flattening the wiki into one file
+- bridge/export boundaries for cross-project synthesis
+- optional graph-lens deferral
+- privacy and public-repo portability
 
 Those prompts are meant to catch the common baseline failure: a generic agent says sensible things, but lacks a disciplined local-wiki operating contract.
+
+The expanded eval set also checks the boundary tension: the agent should not over-globalize by editing external stores silently, but also should not over-localize by refusing useful cross-project synthesis. The expected move is a grounded local bridge packet plus an explicit approval boundary.

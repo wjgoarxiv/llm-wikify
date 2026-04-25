@@ -1,0 +1,8 @@
+Synthetic meeting scribbles for local wiki stress testing
+
+- Keep the first page readable for someone who has never seen an LLM wiki.
+- Do not expose raw/wiki/schema/bridge words in the first response.
+- The source material should remain untouched; generated notes can cite it.
+- Open issue: code chunks may need a dedicated topic because they mix implementation hints and assumptions.
+- Contradiction: one note says graph maps should wait until 20 pages; another says they can help at 10 pages.
+- TODO: mark conflicts visibly instead of choosing a winner.

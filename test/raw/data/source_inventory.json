@@ -1,0 +1,12 @@
+{
+  "fixture": "llm-wikify stress test",
+  "scope": "test directory only",
+  "sources": [
+    {"path": "raw/papers/offline_retrieval_latency.pdf", "type": "synthetic_pdf", "theme": "local retrieval"},
+    {"path": "raw/papers/relationship_lens_article.pdf", "type": "synthetic_pdf", "theme": "optional graph lens"},
+    {"path": "raw/docs/product_meeting_notes.docx", "type": "synthetic_docx", "theme": "novice onboarding"},
+    {"path": "raw/code/chunk_ingest_pipeline.py", "type": "code", "theme": "source classification"},
+    {"path": "raw/code/relationship_map.js", "type": "code", "theme": "relationship extraction"}
+  ],
+  "safety": "public dummy content only"
+}

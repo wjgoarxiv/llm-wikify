@@ -1,0 +1,4 @@
+source_group,documents,claimed_threshold_pages,novice_confusion_score,notes
+local_wiki_baseline,8,0,2,"Home page and source notes worked well"
+early_graph_lens,10,10,6,"Some users asked why graph setup appeared first"
+delayed_graph_lens,24,20,3,"Relationship map helped after wiki pages existed"

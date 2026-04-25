@@ -1,11 +1,11 @@
-<p align="center"><img src="./llm-wikify/cover.png" width="100%" /></p>
+<p align="center"><img src="./cover.png" width="100%" /></p>
 
 <h1 align="center">llm-wikify</h1>
 <p align="center">
   <em>거대한 범용 볼트를 만들지 않고, 현재 작업 디렉터리를 작고 누적되는 LLM 위키로 바꿉니다.</em>
 </p>
 <p align="center">
-  <a href="#언제-써야-하나">언제 써야 하나</a> · <a href="#빠른-시작">빠른 시작</a> · <a href="#기능">기능</a> · <a href="#워크플로우">워크플로우</a> · <a href="#리포지토리-구성">리포지토리 구성</a> · <a href="./README.md">English</a>
+  <a href="#초보자-빠른-시작">초보자 빠른 시작</a> · <a href="#언제-써야-하나">언제 써야 하나</a> · <a href="#기능">기능</a> · <a href="#워크플로우">워크플로우</a> · <a href="#리포지토리-구성">리포지토리 구성</a> · <a href="./README.md">English</a>
 </p>
 <p align="center">
   <img src="https://img.shields.io/badge/skill-local%20wiki-blueviolet" />
@@ -18,6 +18,44 @@
 
 > [!NOTE]
 > `llm-wikify`는 Karpathy의 `llm-wiki` 아이디어에서 출발했지만, **작업 중심(task-driven)** 흐름에 맞게 좁혀 설계했습니다. 하나의 거대한 메가 위키를 계속 뒤지는 대신, **현재 작업 디렉터리 자체를 미니 위키 경계**로 삼습니다. `raw/`에 들어온 새 자료는 이 로컬 마크다운 지식베이스로 점진적으로 통합되고, 프로젝트가 바뀌면 위키 경계도 함께 바뀝니다.
+
+## 초보자 빠른 시작
+
+내부 구조를 아직 몰라도 이렇게만 요청하면 됩니다:
+
+```text
+이 폴더를 유지되는 로컬 위키로 바꿔줘. 설정은 단순하게 하고, 시작 전에 꼭 필요한 것만 물어봐.
+```
+
+에이전트는 첫 실행에서 최대 세 가지 질문만 해야 합니다:
+
+1. 이 위키는 뭘 오래 기억해야 하나요?
+2. 지금 있는 원본 자료는 무엇이고, 앞으로 어떤 자료가 계속 들어오나요?
+3. 어느 정도 자율적으로 정리하면 되나요?
+   - A) 알아서 정리하고 결과만 보여주기
+   - B) 핵심 요약을 먼저 보여준 뒤 구조화하기
+   - C) 소스 하나씩 처리하며 검토받기
+
+첫 결과를 보기 전부터 내부 폴더 이름을 알 필요는 없습니다. 부트스트랩 후에는 `wiki/home.md`에서 시작하면 됩니다.
+
+폴더가 비어 있다면 먼저 starter pack을 고릅니다:
+
+- 개인 지식
+- 리서치 / 딥다이브
+- 프로젝트 handoff
+- 책 / 강의 노트
+- 업무 / 팀 위키
+
+그래도 seed가 부족하면 이렇게 답하면 됩니다:
+
+```text
+일단 이 위키가 기억해야 할 핵심 메모 3개는 이거야:
+1. ...
+2. ...
+3. ...
+```
+
+브릿지/export나 graph-style 관계 지도는 나중에 켜는 고급 옵션입니다. 첫 사용에 필요하지 않고, 외부/전역 위치에 쓰려면 명시적 승인이 필요합니다.
 
 ## 왜 필요한가
 
@@ -44,6 +82,8 @@ Karpathy의 핵심 통찰은 매우 강력합니다. 질문할 때마다 원문 
 - **근거 명시 요구** — durable page는 어떤 repo landmark / source note / raw input에서 왔는지 밝혀야 함
 - **멱등적 인제스트 편향** — 같은 소스를 다시 넣어도 중복 페이지 대신 기존 노트를 업데이트
 - **지식 누적** — 가치 있는 질의 응답 결과를 채팅에만 남기지 않고 위키로 환원 가능
+- **브릿지 / 승격 패킷** — 로컬 지식을 전역 `llm-wiki`나 cross-project 지식맵으로 보낼 때, 경계를 깨지 않고 로컬 export packet으로 정리
+- **강화된 헬스 게이트** — boundary, provenance, promotion, contradiction, taxonomy/schema drift, source drift까지 점검
 
 ## 언제 써야 하나
 
@@ -64,17 +104,17 @@ Karpathy의 핵심 통찰은 매우 강력합니다. 질문할 때마다 원문 
 
 ## 빠른 시작
 
-### 1. LLM용 빠른 스킬 설치
+### 1. 선택: LLM용 빠른 스킬 설치
 
 > [!TIP]
 > 셸 명령을 실행할 수 있는 LLM 에이전트라면, 아래 코드블록을 그대로 복사해서 채팅에 붙여넣는 것만으로 스킬 설치를 자동으로 끝낼 수 있습니다.
 
 ```text
 llm-wikify 스킬을 설치해줘.
-1. git clone https://github.com/wjgoarxiv/llm-wikify /tmp/llm-wikify
+1. git clone <repo-url> /tmp/llm-wikify
 2. mkdir -p ~/.claude/skills/llm-wikify
-3. cp -r /tmp/llm-wikify/llm-wikify/SKILL.md /tmp/llm-wikify/llm-wikify/assets /tmp/llm-wikify/llm-wikify/evals ~/.claude/skills/llm-wikify/
-4. cp /tmp/llm-wikify/llm-wikify/generate_cover.sh ~/.claude/skills/llm-wikify/
+3. cp -r /tmp/llm-wikify/SKILL.md /tmp/llm-wikify/assets /tmp/llm-wikify/evals ~/.claude/skills/llm-wikify/
+4. cp /tmp/llm-wikify/generate_cover.sh ~/.claude/skills/llm-wikify/
 5. chmod +x ~/.claude/skills/llm-wikify/generate_cover.sh
 6. test -f ~/.claude/skills/llm-wikify/SKILL.md && echo "OK: llm-wikify installed"
 7. "llm-wikify installed successfully"라고 말해줘
@@ -124,6 +164,7 @@ raw/ 안의 파일들을 이 프로젝트 위키로 인제스트해.
 - `wiki/index.md`
 - topic page
 - source note
+- 지식을 승격해야 할 때의 bridge/export packet
 - maintenance log
 
 원문은 raw에 남고, 위키는 유지되는 합성 레이어가 됩니다.
@@ -159,6 +200,20 @@ raw/ 안의 파일들을 이 프로젝트 위키로 인제스트해.
 3. 유지된 위키를 바탕으로 답변하고
 4. 오래 남길 가치가 있는 분석이면 다시 위키에 파일링합니다
 
+### Bridge / promote
+
+로컬 지식이 프로젝트 밖에서도 유용해졌다면 에이전트는:
+
+1. 프로젝트별 사실은 local wiki를 source of truth로 유지하고
+2. `wiki/bridges/<slug>.md` export packet을 만들고
+3. 재사용 가능한 개념과 repo-specific 디테일을 분리하고
+4. 로컬 topic/source/raw evidence를 인용하고
+5. 외부 위키, vault, graph database, 다른 프로젝트에 쓰기 전 명시적 승인을 받아야 합니다
+
+### 선택: graph / 관계 렌즈
+
+로컬 위키에 페이지가 충분히 쌓인 뒤에는 선택적으로 graph-style 관계 지도나 리포트를 현재 작업 디렉터리 안에 만들 수 있습니다. 이 기능은 첫 실행 필수 개념이 아니며, 외부 graph database나 vault에 쓰려면 명시적 승인이 필요합니다.
+
 ### Lint / maintain
 
 주기적으로 다음을 점검해야 합니다:
@@ -170,6 +225,8 @@ raw/ 안의 파일들을 이 프로젝트 위키로 인제스트해.
 - inconsistent naming
 - weak summary
 - raw-ingestion leftover
+- bridge packet 상태 drift
+- contradiction / schema / source drift
 
 그 후 안전한 수정만 적용하고 maintenance report를 남깁니다.
 
@@ -179,19 +236,18 @@ raw/ 안의 파일들을 이 프로젝트 위키로 인제스트해.
 
 ```text
 .
+├── SKILL.md
 ├── README.md
 ├── README-ko.md
-└── llm-wikify/
-    ├── SKILL.md
-    ├── cover.png
-    ├── generate_cover.sh
-    ├── assets/
-    │   ├── home-template.md
-    │   ├── maintenance-report-template.md
-    │   ├── source-note-template.md
-    │   └── wiki-rules-template.md
-    └── evals/
-        └── evals.json
+├── cover.png
+├── generate_cover.sh
+├── assets/
+│   ├── home-template.md
+│   ├── maintenance-report-template.md
+│   ├── source-note-template.md
+│   └── wiki-rules-template.md
+└── evals/
+    └── evals.json
 ```
 
 ## 위키화된 프로젝트의 기본 폴더 계약
@@ -206,6 +262,7 @@ wiki/
   topics/
   entities/
   sources/
+  bridges/   # 선택적 local export packet
 schema/
   wiki-rules.md
 log/
@@ -239,10 +296,17 @@ log/
 
 ## 검증
 
-이 리포지토리에는 `llm-wikify/evals/evals.json`에 세 가지 압박형 프롬프트가 들어 있습니다:
+이 리포지토리의 `evals/evals.json`에는 주요 실패 모드를 겨냥한 압박형 프롬프트가 들어 있습니다:
 
-- 지저분한 repo에서 로컬 위키를 부트스트랩하기
-- `raw/`의 혼합 자료를 인제스트하기
-- 하나의 파일로 납작하게 만들지 않고 진화하는 위키를 유지보수하기
+- 내부 구조를 너무 일찍 노출하지 않는 novice onboarding
+- 빈 폴더 starter-pack 흐름
+- 지저분한 repo에서 로컬 위키 부트스트랩
+- `raw/`의 혼합 자료 인제스트
+- 하나의 파일로 납작하게 만들지 않는 유지보수
+- cross-project synthesis를 위한 bridge/export 경계
+- 선택적 graph lens 지연 노출
+- privacy와 public-repo portability
 
 이 테스트들은 “그럴듯한 말은 하지만 실제로는 generic agent와 큰 차이가 없는” 실패를 잡기 위해 설계되었습니다.
+
+확장된 eval은 boundary tension도 잡습니다. 에이전트가 멋대로 외부 저장소를 수정하는 것도 실패이고, “로컬 위키니까 cross-project synthesis는 못 함”이라고 도망가는 것도 실패입니다. 정답은 근거 있는 local bridge packet과 명시적 승인 경계입니다.

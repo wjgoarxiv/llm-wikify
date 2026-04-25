@@ -3,8 +3,13 @@
 ## Source
 - Title:
 - Type:
-- Location: raw/... or URL
+- Location: `raw/...`, relative project path, or URL
 - Date ingested:
+
+## Privacy / reuse boundary
+- Does this source contain sensitive or non-portable material? yes/no/unknown
+- What can be summarized safely in reusable pages?
+- What must remain local-only or be paraphrased carefully?
 
 ## Why it matters
 2-4 bullets on why this source is worth preserving.
@@ -16,7 +21,7 @@
 
 ## Evidence anchors
 - Quote, section, timestamp, or raw-file region that supports the most important claims
-- If the source is messy, record the strongest traceable anchors you have
+- If the source is messy, record the strongest traceable anchors you have without copying sensitive raw material unnecessarily
 
 ## Uncertainty / caveats
 - What is partial, ambiguous, weakly supported, or contradictory?
@@ -27,6 +32,12 @@
 - Created:
 - Cross-links:
 
+## Promotion candidates
+- Reusable concepts, decisions, comparisons, entities, or anti-patterns that may deserve a local bridge packet:
+- What must remain local-only:
+- External/global export requires explicit approval before any write outside this directory.
+
 ## Provenance
 - Related topic pages:
 - Related entity pages:
+- Related bridge packets:

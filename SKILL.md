@@ -69,6 +69,72 @@ Do **not** use this skill when:
 
 ## Operating Modes
 
+### 0. Novice Socratic onboarding mode
+Use when the user wants a local wiki but sounds uncertain, starts from an empty folder, asks "how do I use this?", or would be overwhelmed by implementation details. This is the default first-run experience for new users.
+
+Your job:
+- hide internal mechanics at first; do not open with folder taxonomy, schema rules, bridge packets, Graphify, graph databases, or vault concepts
+- ask only the minimum useful questions, then act
+- default to this exact three-question onboarding script:
+
+  ```text
+  I can organize this folder into a maintained local wiki. I will keep the internal structure out of your way first.
+
+  1. What should this wiki remember over time?
+  2. What source material exists now, and what kind of sources will keep arriving?
+  3. How autonomous should I be while organizing it?
+     A) Do it and show results
+     B) Show key takeaways before shaping
+     C) Process one source at a time with review
+  ```
+- use adaptive questioning: stop after those three if there is enough signal; ask follow-ups only when execution would otherwise be fake-grounded
+- if the folder is empty or has almost no sources, offer a starter pack first, then ask for seed content:
+  - personal knowledge
+  - research/deep dive
+  - project handoff
+  - book/course notes
+  - business/team wiki
+  - then: "Give me three things this wiki should remember first."
+- after bootstrapping, point the user to the single start page (`wiki/home.md`)
+- mention bridge/promotion, graph lenses, global export, or external tools only after the first useful wiki exists or when the user explicitly asks about cross-project reuse or relationship maps
+
+Non-goals for novice mode:
+- do not make the user learn `raw/wiki/schema/bridge` vocabulary before the first useful result
+- do not force more than three questions unless ambiguity blocks execution
+- do not silently write into a global wiki, graph database, external vault, sibling repo, or external store
+- do not modify raw source files
+
+### Agent decision boundaries
+
+The agent may decide these without asking once the user has answered the novice onboarding questions or provided enough source context:
+
+- local folder/page naming inside the current working directory
+- whether to create or update topic, entity, source, index, home, schema, or log pages
+- how to summarize, link, and route source material into the local wiki
+- when to mark uncertainty, contradictions, weak provenance, or review-needed items
+- whether to draft a local bridge packet as a candidate artifact
+
+The agent must ask for explicit approval before:
+
+- writing outside the current working directory
+- exporting to a global wiki, another repository, an external vault, a graph database, or any external system
+- modifying raw source files
+- doing destructive or large-scale reorganization
+- turning an optional graph/relationship lens into a dependency
+
+### Public-repo portability and privacy rules
+
+This skill is meant to be cloned or forked by many users. Keep docs, examples, templates, and evals universal:
+
+- use neutral placeholders such as `<repo-url>`, `<project-name>`, `<source-file>`, and `<destination-wiki>`
+- do not include personal names, private paths, private chat exports, credentials, tokens, API keys, machine-specific paths, or organization-internal examples
+- examples should work for an arbitrary project directory, not one user’s local setup
+- when discussing sensitive inputs, say how to preserve provenance and boundaries without copying private raw content into reusable templates
+
+### Optional graph / relationship lens
+
+Graph-style analysis can be useful after a wiki has enough pages to analyze relationships. Treat it as an optional advanced lens, not a first-run requirement. A graph-compatible workflow may read the maintained local wiki, produce relationship maps or reports inside the current working directory, and feed useful findings back into local topic pages or bridge candidates. It must not require a graph backend and must not write to external stores without explicit approval.
+
 ### 1. Bootstrap mode
 Use when the working directory has **no clear wiki structure yet**.
 
@@ -105,6 +171,16 @@ Your job:
 - make targeted fixes
 - leave a short maintenance report with what changed and what still needs human review
 
+### 5. Bridge / promote mode
+Use when local knowledge has become useful beyond this project, or when the user asks how this project relates to another wiki, repo, domain, or global knowledge base.
+
+Your job:
+- keep the local wiki authoritative for project-specific facts
+- identify only the durable concepts, patterns, decisions, comparisons, or entities worth promoting
+- create a local export packet under `wiki/bridges/` rather than silently writing into an external/global vault
+- preserve provenance back to local pages and raw/source notes
+- recommend the destination and merge shape for a global wiki, but do not cross the locality boundary unless the user explicitly authorizes it
+
 ---
 
 ## Default Folder Contract
@@ -119,6 +195,7 @@ wiki/
   topics/            # concept/topic pages
   entities/          # companies, tools, people, systems, components when relevant
   sources/           # per-source summaries or source notes
+  bridges/           # optional export/promote packets for cross-project/global synthesis
 schema/
   wiki-rules.md      # local conventions for this wiki
 log/
@@ -129,7 +206,7 @@ This is the **default**, not a law. If the repo already has a better local struc
 
 If the domain is simpler, reduce it. For small tasks, `wiki/index.md`, `wiki/home.md`, `wiki/topics/`, and `raw/` may be enough.
 
-Do not create every folder just because it appears in this example. Create `entities/`, `sources/`, or `log/` only when they serve the actual project.
+Do not create every folder just because it appears in this example. Create `entities/`, `sources/`, `bridges/`, or `log/` only when they serve the actual project.
 
 ---
 
@@ -149,6 +226,28 @@ Bad:
 - 20 top-level folders created before the directory is understood
 
 If two folders are hard to distinguish, merge them.
+
+---
+
+## Schema, Metadata, and Taxonomy Discipline
+
+Keep metadata lightweight, but make long-lived pages inspectable. For any durable topic/entity/source/bridge page, include a small grounding block near the top when useful:
+
+```markdown
+Type: topic | entity | source | decision | comparison | bridge
+Status: draft | active | stale | candidate | exported | rejected
+Built from: README.md, raw/source.md, [[sources/source-note]]
+Last reviewed: YYYY-MM-DD
+Confidence: high | medium | low
+```
+
+Rules:
+- Do not force metadata onto tiny scratch pages, but add it to pages expected to survive across sessions.
+- If the local wiki uses tags, define the allowed vocabulary in `schema/wiki-rules.md` before spreading it across pages.
+- New page types or status labels must be recorded in `schema/wiki-rules.md`; do not let each page invent its own taxonomy.
+- Contradictions should be surfaced where a reader will see them: source note caveats are not enough if a topic page repeats the contested claim.
+- If source hashes, timestamps, or file mtimes are available, record enough drift signal to notice later changes. Do not silently normalize changed sources.
+- Global taxonomy can inspire the local schema, but must not distort the project-local structure. If global alignment is desired, use a bridge packet.
 
 ---
 
@@ -183,6 +282,9 @@ Do not silently widen scope from the current project to a personal knowledge bas
 
 ### 6. Navigation must stay legible
 Every page should have an obvious path in and out: from `home.md`, `index.md`, a topic page, or a source note.
+
+### 7. Local-to-global promotion is explicit
+Project-local pages may mention global relevance, but they must not silently reorganize or write into a personal/global wiki. When knowledge should travel, create a bridge packet that summarizes the promotion candidate, evidence, target destination, and merge risks. The user decides whether to apply it outside the current directory.
 
 ---
 
@@ -226,6 +328,16 @@ Named systems, tools, people, teams, products, services, code components, or org
 Do **not** create entity pages just because the folder exists.
 
 Entity pages should be rare in small repos. If the entity is mentioned only once or adds no navigation value, keep it inside a topic or source page.
+
+### `wiki/bridges/*.md`
+Promotion or export packets for knowledge that may belong in another project wiki, a global `llm-wiki`, or a higher-level concept map.
+
+Bridge pages are not a second wiki. They are handoff artifacts. Include:
+- local source pages and topic pages that justify the export
+- the distilled claim, pattern, decision, or comparison worth promoting
+- proposed destination page(s) or target domain
+- conflicts, confidence level, and merge risks
+- clear status: `candidate`, `approved-to-export`, `exported`, or `rejected`
 
 ---
 
@@ -284,6 +396,55 @@ High-value answers should not disappear into chat history if they would clearly 
 
 ---
 
+## Bridge / Promotion Workflow
+
+Use this when the project-local wiki has knowledge that should inform another repo, a global `llm-wiki`, an external vault, or a cross-project synthesis.
+
+1. **Prove local grounding first**: read `wiki/index.md`, relevant topic/entity/source pages, and raw evidence anchors if needed.
+2. **Classify the candidate**:
+   - `concept`: reusable idea, pattern, method, or failure mode
+   - `decision`: architecture or process choice that may guide other projects
+   - `comparison`: reusable side-by-side evaluation
+   - `entity`: named tool/system/org/person worth tracking globally
+   - `anti-pattern`: failure mode that should become a future warning
+3. **Create a bridge packet** in `wiki/bridges/<slug>.md` only when at least one is true:
+   - the idea appears in multiple local pages or sources
+   - the user explicitly asks for cross-project/global synthesis
+   - the knowledge would prevent future rework in another project
+   - the pattern is portable beyond this repo's file structure
+4. **Do not write outside the current directory by default.** The bridge packet is the safe artifact. External/global updates require explicit user approval and a destination path.
+5. **Record merge instructions**: proposed global page title, tags/taxonomy suggestions, outbound links, and what must remain local-only.
+6. **Log the bridge action** in `log/log.md`.
+
+### Bridge packet template
+
+```markdown
+# Bridge: <candidate title>
+
+Status: candidate
+Type: concept | decision | comparison | entity | anti-pattern
+Proposed destination: <destination-wiki>/<page-or-slug>.md or <unknown>
+Confidence: high | medium | low
+
+## Local grounding
+- Built from: [[topics/...]], [[sources/...]], raw/...
+
+## Portable knowledge
+- What should travel beyond this local wiki?
+
+## What must stay local
+- Repo-specific paths, transient implementation notes, or context that should not pollute the global wiki.
+
+## Merge risks / contradictions
+- Existing global pages that may conflict
+- Claims needing human review
+
+## Suggested global links/tags
+- Related global pages or likely tags
+```
+
+---
+
 ## Maintenance Workflow
 
 Periodically check for:
@@ -295,10 +456,27 @@ Periodically check for:
 - source notes that were never integrated into topic pages
 - pages that became obsolete after newer sources arrived
 - index drift, where `index.md` no longer reflects reality
+- bridge drift, where `wiki/bridges/` candidates were exported or rejected but not marked
+- tag/schema drift, where pages invent incompatible labels or page types
+- contradiction drift, where conflicting claims are noted in source pages but not surfaced in topic pages
+- source drift, where raw/source files changed since the source note was created when hashes or timestamps are available
 
 Fix what is clearly safe. Flag what needs human judgment.
 
 Always leave a concise maintenance report.
+
+### Lightweight health gates
+
+When maintaining a wiki, check these before claiming success:
+
+| Gate | Pass condition |
+|---|---|
+| Boundary | No page silently widens scope beyond the current directory |
+| Navigation | Important pages are reachable from `wiki/home.md` or `wiki/index.md` |
+| Provenance | Durable claims point to source notes, raw files, or repo landmarks |
+| Promotion | Cross-project claims are represented as bridge packets, not hidden external edits |
+| Contradictions | Conflicting claims are explicitly marked and routed to human review when unsafe |
+| Drift | Source/hash/timestamp changes are flagged instead of silently normalized |
 
 ---
 
@@ -353,6 +531,9 @@ When bootstrapping, document the local rules for future sessions:
 - when a new page is allowed versus when an existing page must be updated
 - how repeated ingest updates existing pages without duplication
 - how maintenance reports should be recorded
+- whether bridge packets are allowed, where they live, and what approval is required before external export
+- the local tag/type vocabulary if the wiki needs one; keep it small and document new labels before using them widely
+- how contradictions, confidence, and source drift should be represented
 
 This is what turns a generic markdown pile into a disciplined maintained wiki.
 
@@ -371,6 +552,9 @@ Do **not** do these:
 - erase uncertainty from partial or conflicting sources
 - merge pages aggressively when overlap might reflect different purposes
 - add indexes everywhere; add them only where navigation actually benefits
+- silently write into a global wiki because a local pattern seems broadly useful
+- refuse all cross-project synthesis because the wiki is local; create a bridge packet instead
+- let every project invent incompatible bridge/status/confidence labels without recording the local convention
 
 ---
 
@@ -383,5 +567,6 @@ After using this skill, the working directory should feel like this:
 - new sources can be added without redesigning everything
 - important claims can be traced back to source notes or raw material
 - the wiki gets richer over time instead of noisier
+- cross-project/global relevance is captured as explicit bridge packets rather than leaking across boundaries
 
 That is the point of llm-wikify: **persistent, compounding project knowledge without the cost of maintaining a giant all-purpose knowledge base.**
