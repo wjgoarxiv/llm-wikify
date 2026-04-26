@@ -16,6 +16,7 @@
 - Contradictory claims
 - Scope or naming decisions with unclear intent
 - Cross-project/global export candidates that need approval
+- Cluster boundaries that need merge/split review
 - Source drift or confidence downgrades that should not be silently normalized
 - Any request to write outside the current working directory
 
@@ -25,6 +26,8 @@
 | Boundary | pass/fail | |
 | Novice UX | pass/fail | First-run path avoids unnecessary internal vocabulary and over-questioning |
 | Navigation | pass/fail | |
+| Cluster boundary | pass/fail/n/a | Clustered sections are justified by evidence and still share the local boundary |
+| Shared pages | pass/fail/n/a | `wiki/shared/` is not being used as a miscellaneous dump |
 | Provenance | pass/fail | |
 | Promotion | pass/fail | |
 | Graph optionality | pass/fail | Graph/relationship tooling is optional and not first-run required |

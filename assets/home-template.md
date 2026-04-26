@@ -24,6 +24,13 @@ Briefly describe the current project, task, research focus, or knowledge area. K
 2. Key topic page
 3. Most important source note
 
+## Optional: cluster map
+Only keep this section for large-domain wikis where clusters are justified by repeated source material or queries.
+- Umbrella overview:
+- Cluster start pages:
+- Shared glossary / canonical concepts:
+- Split-out candidates that may need a separate project wiki:
+
 ## Advanced: reuse candidates
 Only keep this section if reusable knowledge has been explicitly identified.
 - Link any local bridge/export packets that may need review

@@ -30,6 +30,13 @@
 - Otherwise update an existing page.
 - Do not create pages that merely mirror existing folder names or README headings without adding synthesis.
 
+## Optional umbrella-domain / cluster policy
+- Stay flat unless repeated source material, pages, or user queries show stable sub-domains under the same local boundary.
+- If clusters are used, record why each cluster exists and link it from `wiki/index.md` or `wiki/home.md`.
+- `wiki/shared/`, if present, is only for cross-cluster glossary terms, canonical concepts, shared decisions, or reusable comparisons.
+- Split a cluster into a separate project wiki, or ask before reorganizing, when it has independent ownership, audience, privacy boundary, source stream, or maintenance cadence.
+- Cluster policy for this wiki:
+
 ## Public-repo portability and privacy
 - Use neutral placeholders in reusable examples.
 - Do not record personal names, private paths, credentials, private exports, or machine-specific assumptions in templates.
@@ -65,7 +72,7 @@
 
 ## Maintenance
 - Safe fixes: broken links, weak page openings, orphan-page navigation, obvious duplicates.
-- Human-review items: ambiguous merges, contradictory claims, scope changes, external export, graph export, or destructive reorganizations.
+- Human-review items: ambiguous merges, contradictory claims, scope changes, cluster split/merge decisions, external export, graph export, or destructive reorganizations.
 
 ## Local vocabulary / quality signals
 - Allowed page types:

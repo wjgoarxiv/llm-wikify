@@ -208,6 +208,61 @@ If the domain is simpler, reduce it. For small tasks, `wiki/index.md`, `wiki/hom
 
 Do not create every folder just because it appears in this example. Create `entities/`, `sources/`, `bridges/`, or `log/` only when they serve the actual project.
 
+### Optional umbrella-domain / clustered wiki pattern
+
+For one large but coherent domain inside the current working directory, a flat `wiki/topics/` layer may eventually become hard to navigate. In that case, you may add an umbrella-domain structure with cluster mini-wikis, but only when source material, existing pages, or repeated user queries prove that stable sub-domains exist.
+
+This is an **advanced optional pattern**, not the default. Keep novice onboarding simple and start flat unless the user explicitly asks for a large-domain structure or the inspected material clearly justifies clusters.
+
+Stay with the flat default when:
+- the wiki has one main audience and one maintenance cadence
+- `wiki/home.md`, `wiki/index.md`, and `wiki/topics/` are still easy to navigate
+- sources do not repeatedly belong to stable sub-domains
+- shared glossary or comparison pages are enough
+- cluster folders would mostly mirror speculative categories
+
+Use umbrella clusters when:
+- the working directory intentionally covers one large coherent domain, such as Gas Hydrates, LLM Agents, or Process Simulation
+- at least two stable sub-domains recur across sources, topics, or queries
+- each sub-domain has enough material to justify a cluster home page or repeated local pages
+- readers need both an umbrella map and cluster-specific reading paths
+- cross-cluster concepts can stay local in `wiki/shared/` without becoming a global vault
+- the clusters share the same local boundary, ownership, audience, and maintenance loop
+
+Split into a separate project wiki or ask before reorganizing when:
+- a cluster has independent ownership, lifecycle, audience, confidentiality boundary, source stream, or maintenance cadence
+- keeping it inside the umbrella wiki would create noise, privacy risk, or misleading provenance
+- the cluster needs its own raw inputs, schema rules, log, bridge policy, or working-directory boundary
+- the user explicitly asks for a separate wiki
+
+Optional clustered shape:
+
+```text
+raw/
+wiki/
+  home.md                 # umbrella start page
+  index.md                # umbrella catalog and cluster map
+  topics/                 # umbrella-level topics only when cross-cluster or domain-wide
+  entities/               # optional umbrella-level entities/systems/tools
+  sources/                # optional source notes that are domain-wide or not cluster-specific
+  shared/                 # glossary, canonical concepts, shared comparisons, shared decisions
+  clusters/
+    <cluster>/
+      home.md             # cluster start page and reading path
+      topics/             # cluster-local topic pages, only if justified
+      sources/            # cluster-local source notes, only if provenance benefits
+      comparisons/        # cluster-local comparisons, only if repeatedly useful
+  bridges/                # local promotion/export packets; external writes still require approval
+schema/
+  wiki-rules.md
+log/
+  log.md
+```
+
+`wiki/shared/` is not a `misc/` folder. Use it only for concepts that genuinely cross clusters: glossary terms, canonical definitions, shared decision records, reusable comparisons, or domain-wide relationship notes.
+
+Graph or relationship maps may analyze umbrella and cluster links after the wiki has enough maintained pages, but graph tooling remains optional. Keep graph outputs inside the current working directory unless the user explicitly approves an external destination.
+
 ---
 
 ## MECE Structuring Heuristic
@@ -475,6 +530,8 @@ When maintaining a wiki, check these before claiming success:
 | Navigation | Important pages are reachable from `wiki/home.md` or `wiki/index.md` |
 | Provenance | Durable claims point to source notes, raw files, or repo landmarks |
 | Promotion | Cross-project claims are represented as bridge packets, not hidden external edits |
+| Cluster boundaries | Clustered wiki sections, if present, are evidence-driven and still inside the current working directory |
+| Shared pages | `wiki/shared/` contains cross-cluster concepts, not a catch-all `misc` dump |
 | Contradictions | Conflicting claims are explicitly marked and routed to human review when unsafe |
 | Drift | Source/hash/timestamp changes are flagged instead of silently normalized |
 
@@ -532,6 +589,8 @@ When bootstrapping, document the local rules for future sessions:
 - how repeated ingest updates existing pages without duplication
 - how maintenance reports should be recorded
 - whether bridge packets are allowed, where they live, and what approval is required before external export
+- whether umbrella-domain clusters are allowed, what justifies a cluster, and when a cluster should split into a separate wiki
+- what may live in `wiki/shared/`, if that folder exists
 - the local tag/type vocabulary if the wiki needs one; keep it small and document new labels before using them widely
 - how contradictions, confidence, and source drift should be represented
 

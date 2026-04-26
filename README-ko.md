@@ -79,6 +79,7 @@ Karpathy의 핵심 통찰은 매우 강력합니다. 질문할 때마다 원문 
 - **유지보수 모드** — 오래된 페이지, 깨진 링크, orphan, 중복, 약한 내비게이션 점검
 - **출처 우선 워크플로우** — 근거 없는 요약 덩어리가 아니라 출처와 함께 지식 보존
 - **최소 구조 편향** — 현재 프로젝트가 정당화하는 폴더와 페이지만 생성
+- **선택적 대형 도메인 클러스터** — 하나의 큰 일관된 도메인에 한해, 기본값으로 만들지 않고 근거가 있을 때만 클러스터형 미니 위키를 추가
 - **근거 명시 요구** — durable page는 어떤 repo landmark / source note / raw input에서 왔는지 밝혀야 함
 - **멱등적 인제스트 편향** — 같은 소스를 다시 넣어도 중복 페이지 대신 기존 노트를 업데이트
 - **지식 누적** — 가치 있는 질의 응답 결과를 채팅에만 남기지 않고 위키로 환원 가능
@@ -93,6 +94,7 @@ Karpathy의 핵심 통찰은 매우 강력합니다. 질문할 때마다 원문 
 - 새 source file, note, URL, export, transcript를 `raw/`에 넣고 흡수하고 싶을 때
 - 세션이 바뀌어도 프로젝트 이해를 안정적으로 누적하고 싶을 때
 - 리서치, 엔지니어링, 실사, 계획, 문서화 작업을 위한 작은 로컬 위키가 필요할 때
+- 하나의 큰 일관된 도메인을 상위 지도와 클러스터별 읽기 경로로 정리해야 하고, 평면 topic 목록만으로는 탐색이 어려울 때
 - 이미 있는 로컬 위키를 건강검진하고 정리하고 싶을 때
 
 반대로 이런 경우에는 과합니다:
@@ -200,6 +202,12 @@ raw/ 안의 파일들을 이 프로젝트 위키로 인제스트해.
 3. 유지된 위키를 바탕으로 답변하고
 4. 오래 남길 가치가 있는 분석이면 다시 위키에 파일링합니다
 
+### 선택: 대형 도메인 / 클러스터 모드
+
+하나의 작업 디렉터리 안에서 Gas Hydrates, LLM Agents, Process Simulation처럼 크지만 일관된 도메인을 다룰 때는 상위 지도와 클러스터형 미니 위키를 추가할 수 있습니다. 이 모드는 선택적이고 근거 기반입니다. `wiki/topics/`만으로도 탐색이 가능하면 평면 구조를 유지하고, source나 query에서 안정적인 sub-domain이 반복될 때만 cluster를 사용합니다. ownership, audience, confidentiality boundary, source stream, maintenance cadence가 달라지는 cluster는 별도 project wiki로 분리하거나 먼저 확인해야 합니다.
+
+Clustered wiki도 같은 local boundary를 지켜야 합니다. `wiki/shared/`는 cross-cluster glossary, canonical concept, shared decision, reusable comparison에만 쓰며 `misc` 폴더가 아닙니다. Graph나 relationship map은 선택적 local report일 뿐 필수 backend가 아닙니다.
+
 ### Bridge / promote
 
 로컬 지식이 프로젝트 밖에서도 유용해졌다면 에이전트는:
@@ -270,6 +278,30 @@ log/
 ```
 
 이건 **출발점**이지 강제 규칙이 아닙니다. 프로젝트가 더 작은 구조를 요구하면 더 적게 만들어야 합니다.
+
+하나의 큰 일관된 도메인에서는, source material이 정당화할 때만 선택적으로 clustered shape를 사용할 수 있습니다:
+
+```text
+raw/
+wiki/
+  home.md                 # umbrella start page
+  index.md                # umbrella catalog and cluster map
+  topics/                 # domain-wide topic만
+  shared/                 # cross-cluster glossary, canonical concept, shared comparison
+  clusters/
+    <cluster>/
+      home.md             # cluster start page
+      topics/             # 근거가 있을 때만 cluster-local topic
+      sources/            # provenance에 도움이 될 때만 cluster-local source note
+      comparisons/        # 반복적으로 유용할 때만 cluster-local comparison
+  bridges/                # local export packet; 외부 쓰기는 여전히 명시적 승인 필요
+schema/
+  wiki-rules.md
+log/
+  log.md
+```
+
+이 구조는 같은 local boundary 안에 반복되는 sub-domain이 있을 때만 사용합니다. 어떤 cluster가 lifecycle, audience, privacy boundary, source stream, maintenance owner를 따로 갖는다면 별도 project wiki로 분리하거나 재구성 전에 확인해야 합니다.
 
 ## 설계 원칙
 

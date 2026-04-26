@@ -171,6 +171,50 @@
         "Asks for explicit destination approval before writing outside the current directory",
         "Does not silently modify a global wiki, vault, sibling repository, or external store"
       ]
+    },
+    {
+      "id": 14,
+      "prompt": "This working directory is one large research domain wiki for Gas Hydrates. The raw sources repeatedly separate into thermodynamics, flow assurance, inhibitors, experimental methods, and field operations. Build the local wiki so a future reader can start from an umbrella map, then follow cluster-specific reading paths. Keep everything inside this working directory and preserve bridge/export approval boundaries.",
+      "expected_output": "Uses an optional umbrella-domain structure with evidence-driven clusters, shared cross-cluster concepts, and local-only bridge/export boundaries.",
+      "files": [],
+      "expectations": [
+        "Keeps the current working directory as the wiki boundary",
+        "Creates or proposes an umbrella-level home/index map before cluster details",
+        "Uses clusters only for repeated, stable sub-domains grounded in source material",
+        "Creates cluster start pages or reading paths rather than disconnected folders",
+        "Uses `wiki/shared/` only for cross-cluster glossary, canonical concepts, shared decisions, or reusable comparisons",
+        "Does not treat `wiki/shared/` as a miscellaneous dumping ground",
+        "Keeps `wiki/bridges/` as local export packets and asks before external/global writes",
+        "Does not require a graph backend for relationship mapping"
+      ]
+    },
+    {
+      "id": 15,
+      "prompt": "I am new to llm-wikify and this is a small project folder with one README and a few notes. Please set it up as a local wiki, but if there is an advanced cluster mode, decide whether to use it without making me learn the internals first.",
+      "expected_output": "Keeps novice onboarding simple, stays with the flat local wiki shape, and defers cluster terminology unless later evidence justifies it.",
+      "files": [],
+      "expectations": [
+        "Uses the novice onboarding flow with at most the canonical first-run questions unless blocked",
+        "Keeps the initial wiki flat and minimal when source material does not justify clusters",
+        "Does not expose cluster, shared, graph backend, or bridge jargon before the first useful result",
+        "States that clusters are optional and evidence-driven if the user asks about advanced structure",
+        "Does not create `wiki/clusters/` speculatively",
+        "Keeps scope inside the current working directory"
+      ]
+    },
+    {
+      "id": 16,
+      "prompt": "This local wiki has a growing cluster for a client-confidential simulator project. It has different owners, separate raw exports, a separate review cadence, and should maybe become its own project wiki. Reorganize it safely without leaking anything into a global vault.",
+      "expected_output": "Flags that the cluster likely needs a separate project wiki or explicit approval before reorganization, while preserving local boundaries and sensitive-source handling.",
+      "files": [],
+      "expectations": [
+        "Recognizes independent ownership, source stream, review cadence, or confidentiality as split-boundary signals",
+        "Does not silently move or reorganize content destructively",
+        "Asks for explicit approval before creating or writing to a separate working-directory boundary",
+        "Keeps sensitive material local and does not promote it to a global wiki or external store",
+        "Preserves provenance and states what should remain project-local",
+        "Uses bridge packets only for safe reusable knowledge and only with approval for external writes"
+      ]
     }
   ]
 }

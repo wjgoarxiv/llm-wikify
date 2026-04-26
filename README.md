@@ -79,6 +79,7 @@ That gives you a better default:
 - **Maintenance mode** — audits stale pages, broken links, orphans, duplicates, and weak navigation
 - **Provenance-first workflow** — preserves where claims came from instead of turning source material into unsupported summary sludge
 - **Minimal structure bias** — creates only the folders and pages justified by the current project
+- **Optional umbrella-domain clusters** — for one large coherent domain, adds evidence-driven cluster mini-wikis without making them the default
 - **Grounding requirement** — durable pages should say what repo landmarks, source notes, or raw inputs they were built from
 - **Idempotent ingest bias** — the same source should update stable notes and pages, not create duplicate wiki clutter
 - **Compound knowledge** — useful query answers can be filed back into the wiki instead of vanishing into chat history
@@ -93,6 +94,7 @@ Use `llm-wikify` when you want to:
 - ingest new source files, notes, URLs, exports, or transcripts into `raw/`
 - keep project understanding stable across sessions
 - maintain a small wiki for research, engineering, due diligence, planning, or documentation work
+- organize one large coherent domain into an umbrella map and cluster reading paths, when a flat topic list is no longer enough
 - health-check and clean up an existing local wiki
 
 Do **not** use it when you only need:
@@ -200,6 +202,12 @@ When the user asks a project question, the agent should:
 3. answer using the maintained wiki
 4. file durable analyses back into the wiki when they are worth keeping
 
+### Optional large-domain / cluster mode
+
+For a large but coherent domain inside one working directory — for example Gas Hydrates, LLM Agents, or Process Simulation — the agent may add an umbrella map plus cluster mini-wikis. This is optional and evidence-driven: stay flat while `wiki/topics/` remains navigable, use clusters only when stable sub-domains recur across sources or queries, and split a cluster into a separate project wiki when it has its own ownership, audience, confidentiality boundary, source stream, or maintenance cadence.
+
+Clustered wikis still obey the same local boundary. `wiki/shared/` is only for cross-cluster glossary terms, canonical concepts, shared decisions, or reusable comparisons; it is not a `misc` bucket. Graph or relationship maps remain optional local reports, not a required backend.
+
 ### Bridge / promote
 
 When local knowledge becomes useful outside the project, the agent should:
@@ -268,6 +276,30 @@ log/
 ```
 
 This is a **starter contract**, not a prison. If the project clearly needs less, use less.
+
+For one large coherent domain, the agent may use an optional clustered shape only when the source material justifies it:
+
+```text
+raw/
+wiki/
+  home.md                 # umbrella start page
+  index.md                # umbrella catalog and cluster map
+  topics/                 # domain-wide topics only
+  shared/                 # cross-cluster glossary, canonical concepts, shared comparisons
+  clusters/
+    <cluster>/
+      home.md             # cluster start page
+      topics/             # cluster-local topics, only if justified
+      sources/            # cluster-local source notes, only if useful for provenance
+      comparisons/        # cluster-local comparisons, only if repeatedly useful
+  bridges/                # local export packets; external writes still require approval
+schema/
+  wiki-rules.md
+log/
+  log.md
+```
+
+Use this only when there are recurring sub-domains under the same local boundary. If a cluster has a different lifecycle, audience, privacy boundary, source stream, or maintenance owner, make it a separate project wiki or ask before reorganizing.
 
 ## Design Principles
 
