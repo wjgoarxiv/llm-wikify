@@ -54,6 +54,28 @@
 - Graph outputs, if used, must stay inside the current working directory unless an external destination is explicitly approved.
 - Do not make graph tooling a required dependency for the local wiki.
 
+## Scientific paper ingest policy
+- Scientific papers, TeX bundles, bibliography files, supplements, and converted paper Markdown remain source material under `raw/`.
+- Paper source notes should use a stable path under `wiki/sources/` unless this local wiki explicitly adopts a separate `wiki/papers/` entity layer.
+- Preferred paper source-note template: `assets/paper-source-note-template.md` when available.
+- Required paper metadata fields for this wiki:
+- Paper importance / relevance scale, if used: 1 low, 2 background, 3 useful, 4 important, 5 core
+- New topic/entity creation budget:
+  - Low-importance papers:
+  - High-importance papers:
+- Dedup rule before creating paper-derived pages:
+- Citation provenance style: parsed references | `.bib` | DOI/arXiv | Semantic Scholar | manual | unknown
+- Figure/table/equation anchor style:
+- TeX-bundle limitations to record: unresolved macros, missing includes, missing figures, incomplete bibliography, compile-only content, or unknown
+
+## Optional local research relationship artifacts
+- `wiki/graph/edges.jsonl`, if enabled, stores semantic relationships between local wiki pages.
+- `wiki/graph/citations.jsonl`, if enabled, stores bibliographic citation relationships separately from semantic claims.
+- `wiki/gaps.md`, if enabled, aggregates open questions, limitations, weak claims, and future-work leads.
+- `wiki/context.md`, if enabled, is a compact query brief and must be rebuilt or marked stale after major ingest changes.
+- `.ingest-manifest.json`, if enabled, tracks batch ingestion status and resume points.
+- Relationship artifact policy for this wiki:
+
 ## Linking
 - Prefer wiki-style internal linking where supported by the user’s markdown environment.
 - Otherwise use relative markdown links.
@@ -80,6 +102,8 @@
 - Confidence values, if used: high, medium, low
 - Contradiction marker style:
 - Source drift marker style:
+- Paper source drift marker style:
+- Relationship edge confidence style:
 
 ## Durable page metadata
 Use this block for pages expected to survive across sessions:

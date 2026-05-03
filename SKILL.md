@@ -5,6 +5,9 @@ description: |
   Use when the user wants to organize project knowledge, ingest files or URLs into
   a local markdown wiki, bootstrap a wiki structure in-place, maintain an existing
   mini wiki, or build a repo-scoped knowledge base instead of a giant global vault.
+  Also use when scientific papers, PDFs, TeX bundles, bibliographies, or research
+  corpora should be ingested into a maintained local wiki with provenance and
+  citations, subject to extraction quality and available metadata.
   Trigger on phrases like "wiki this repo", "ingest raw/", "build a local wiki",
   "maintain this knowledge base", "turn this directory into an LLM wiki", or when
   repeated project knowledge needs to compound across sessions. DO NOT TRIGGER when:
@@ -53,6 +56,7 @@ Use this skill when the user wants any of the following:
 
 - bootstrap a wiki in the current repo or task folder
 - ingest new sources dropped into `raw/`
+- ingest scientific papers, PDFs, TeX bundles, bibliographies, or already-converted paper Markdown into a local research wiki
 - keep summaries, concepts, decisions, entities, and references synchronized over time
 - answer project questions against a persistent local markdown knowledge base
 - lint or maintain an existing local wiki
@@ -153,6 +157,32 @@ Your job:
 - extract useful knowledge into the wiki
 - preserve provenance for claims and summaries
 - update related pages incrementally rather than rewriting everything
+
+### 2a. Scientific paper ingest mode
+Use this advanced ingest sub-mode when `raw/` contains scientific papers or research corpora: PDFs, TeX/LaTeX bundles, arXiv source exports, already-converted paper Markdown, `.bib` files, supplements, figures, tables, or curated bibliography exports.
+
+This mode borrows structured research-wiki patterns without turning the local wiki into a fixed global research platform.
+
+Your job:
+- keep original paper files and TeX bundles immutable under `raw/`
+- convert or linearize sources only into derived working files or wiki notes, never by rewriting raw inputs
+- create or update one stable paper source note per paper or source bundle, preferably using `assets/paper-source-note-template.md` when available
+- extract bibliographic metadata when available: title, authors, venue, year, DOI, arXiv ID, source files, bibliography file, and citation-source confidence
+- preserve paper structure where extraction quality allows: abstract, problem, method, assumptions, datasets, experiments, results, limitations, open questions, figures/tables, equations, and references
+- route durable concepts, methods, datasets, claims, limitations, and open questions into existing topic/shared pages instead of creating a page for every section
+- run a deduplication pass before creating new topic/entity pages: compare intended page titles and claims against existing index/topic/source pages; merge when overlap is likely
+- use paper importance to limit wiki growth: low-importance papers should usually create at most one new topic and one new claim/concept; high-importance papers may justify more, but only when navigation improves
+- record uncertainty for missing metadata, unresolved TeX macros, broken includes, incomplete bibliography, OCR/conversion artifacts, inaccessible figures, weak claims, or contradicted results
+- update `wiki/index.md`, `wiki/home.md`, and `log/log.md` only for real persistent additions or changes
+
+Optional local research artifacts, created only when useful and inside the current working directory:
+- `.ingest-manifest.json` for resumable batch paper ingestion
+- `wiki/graph/edges.jsonl` for semantic relationships such as `builds_on`, `uses_method`, `supports`, `contradicts`, `extends`, or `replicates`
+- `wiki/graph/citations.jsonl` for bibliographic citation edges from parsed `.bib`, paper references, Semantic Scholar, or manual review
+- `wiki/gaps.md` for open questions, limitations, weakly supported claims, and future-work leads aggregated from paper/source/topic pages
+- `wiki/context.md` for a compact reading brief summarizing paper count, key concepts, active gaps, and recent changes
+
+Do not make these optional artifacts first-run requirements. They are scale tools for research wikis that have enough papers to benefit from them.
 
 ### 3. Query mode
 Use when the user asks questions against the local wiki.
@@ -263,6 +293,26 @@ log/
 
 Graph or relationship maps may analyze umbrella and cluster links after the wiki has enough maintained pages, but graph tooling remains optional. Keep graph outputs inside the current working directory unless the user explicitly approves an external destination.
 
+### Optional research graph / citation layer
+
+For scientific-paper wikis, a lightweight local graph can be useful once multiple papers and topics exist. Keep it file-based and optional:
+
+```text
+wiki/
+  graph/
+    edges.jsonl       # semantic relationships between local pages
+    citations.jsonl   # bibliographic citation edges and metadata provenance
+  gaps.md             # optional aggregated open questions / research gaps
+  context.md          # optional compact query brief
+.ingest-manifest.json # optional resumable batch ingest manifest
+```
+
+Rules:
+- Semantic edges and citation edges are different. A paper may cite another paper without supporting it, and a paper may semantically contradict another even if it does not cite it.
+- Each graph JSON line should include enough provenance to audit it: `from`, `to`, `type`, `evidence`, `confidence`, and `source` when known.
+- Relationship files are local wiki artifacts, not an external graph database. External graph export requires explicit approval.
+- If graph files become stale, maintenance should either rebuild them from wiki pages or mark them stale; do not silently trust old relationship data.
+
 ---
 
 ## MECE Structuring Heuristic
@@ -366,6 +416,8 @@ Should capture:
 - what changed in the wiki because of it
 - open questions or contradictions
 
+For scientific papers, source notes should also capture paper metadata, key claims, methods, evidence anchors, citation context, limitations, and re-ingest drift. Use a dedicated paper source-note template when available.
+
 ### `wiki/topics/*.md`
 Persistent concepts, workflows, comparisons, decisions, or thematic summaries.
 
@@ -433,6 +485,24 @@ When new material appears in `raw/`:
 If one source touches many pages, that is normal.
 
 Do not treat provenance as a decorative backlink. Major sections should make it clear which source note or raw input they came from.
+
+### Scientific paper ingest workflow
+
+When the new source is a paper PDF, TeX bundle, paper Markdown, bibliography, or supplement:
+
+1. **Classify the source bundle**: PDF, TeX entry file, included TeX sections, figures, tables, bibliography, supplements, converted Markdown, or metadata-only citation export.
+2. **Extract safely**:
+   - For PDFs, prefer a clean Markdown conversion path such as MarkItDown or a paper-conversion skill/tool when available.
+   - For TeX, read the entry file and included section files directly when possible; preserve equations, labels, captions, and bibliography keys as evidence anchors.
+   - If extraction is incomplete, continue with visible uncertainty instead of fabricating missing content.
+3. **Create or update one stable paper source note** in `wiki/sources/` for the paper or source bundle. Do not create duplicate notes for corrected PDFs, revised TeX exports, or updated `.bib` files.
+4. **Capture paper metadata**: title, authors, venue/year, DOI/arXiv ID, source path(s), conversion path, bibliography path, date ingested, confidence, and source drift signal when available.
+5. **Extract the research map where accessible**: problem, key idea, method, assumptions, datasets, experiments, results, limitations, open questions, important equations, figures/tables, and references. Mark items that could not be extracted as uncertain or missing.
+6. **Deduplicate before page creation**: search existing wiki index/source/topic pages for similar concepts, methods, claims, datasets, and acronyms. Merge into existing pages unless a new page clearly improves navigation.
+7. **Apply an importance budget**: record paper importance or relevance. Low-importance papers should mostly update the source note and existing topics; high-importance papers may create a small number of new topic/shared pages.
+8. **Update durable pages**: add only reusable concepts, methods, claims, datasets, limitations, comparisons, and open questions to topic/shared pages with backlinks to the paper source note.
+9. **Optionally update local relationship artifacts**: append semantic edges, citation edges, a gap-map entry, context brief notes, or an ingest manifest entry if the local wiki already uses those artifacts.
+10. **Log the ingest** in `log/log.md` with source identity, pages created/updated, conversion caveats, and review-needed items.
 
 ---
 
@@ -529,6 +599,7 @@ When maintaining a wiki, check these before claiming success:
 | Boundary | No page silently widens scope beyond the current directory |
 | Navigation | Important pages are reachable from `wiki/home.md` or `wiki/index.md` |
 | Provenance | Durable claims point to source notes, raw files, or repo landmarks |
+| Paper ingest | Paper metadata, claims, methods, citations, figures/tables, limitations, and open questions are traceable to source notes or raw files |
 | Promotion | Cross-project claims are represented as bridge packets, not hidden external edits |
 | Cluster boundaries | Clustered wiki sections, if present, are evidence-driven and still inside the current working directory |
 | Shared pages | `wiki/shared/` contains cross-cluster concepts, not a catch-all `misc` dump |
@@ -591,6 +662,7 @@ When bootstrapping, document the local rules for future sessions:
 - whether bridge packets are allowed, where they live, and what approval is required before external export
 - whether umbrella-domain clusters are allowed, what justifies a cluster, and when a cluster should split into a separate wiki
 - what may live in `wiki/shared/`, if that folder exists
+- whether scientific-paper mode is used, which paper metadata fields are required, and whether local graph/citation/gap/context artifacts are enabled
 - the local tag/type vocabulary if the wiki needs one; keep it small and document new labels before using them widely
 - how contradictions, confidence, and source drift should be represented
 
@@ -608,6 +680,8 @@ Do **not** do these:
 - invent folders and pages with no grounding in the actual directory
 - create scaffolding that mirrors folder names or README headings without adding synthesis
 - rewrite `raw/` as if it were polished wiki content
+- treat a scientific paper as a giant standalone summary with no metadata, methods, evidence anchors, citation context, or topic integration
+- create a new topic page for every paper section, figure, acronym, or citation without deduplication and navigation value
 - erase uncertainty from partial or conflicting sources
 - merge pages aggressively when overlap might reflect different purposes
 - add indexes everywhere; add them only where navigation actually benefits

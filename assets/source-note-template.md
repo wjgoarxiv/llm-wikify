@@ -6,6 +6,8 @@
 - Location: `raw/...`, relative project path, or URL
 - Date ingested:
 
+> If this source is a scientific paper, TeX bundle, bibliography, or paper supplement, prefer `assets/paper-source-note-template.md` when available. Use this generic template only for non-paper sources or very small paper-adjacent notes.
+
 ## Privacy / reuse boundary
 - Does this source contain sensitive or non-portable material? yes/no/unknown
 - What can be summarized safely in reusable pages?

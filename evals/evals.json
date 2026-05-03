@@ -215,6 +215,51 @@
         "Preserves provenance and states what should remain project-local",
         "Uses bridge packets only for safe reusable knowledge and only with approval for external writes"
       ]
+    },
+    {
+      "id": 17,
+      "prompt": "I dropped several scientific papers into `raw/papers/`: two PDFs, one already-converted Markdown paper, and a bibliography file. Ingest them into this local wiki so I can study the research domain over time. Preserve original files, extract metadata and durable claims, connect related methods/results into topic pages, and avoid turning each paper into one giant summary dump.",
+      "expected_output": "Uses scientific-paper ingest mode with stable source notes, metadata, claim/method/evidence extraction, topic integration, citation/provenance tracking, and no raw-file mutation.",
+      "files": [],
+      "expectations": [
+        "Keeps PDFs, Markdown papers, and bibliography files under `raw/` immutable",
+        "Creates or updates stable paper source notes under `wiki/sources/` instead of one giant paper dump",
+        "Extracts bibliographic metadata such as title, authors, venue/year, DOI/arXiv ID, and source location when available",
+        "Separates durable concepts, methods, datasets, assumptions, results, and limitations into appropriate topic/shared pages",
+        "Preserves evidence anchors back to paper sections, figures, tables, equations, or raw file paths",
+        "Tracks citations and related papers without pretending citation metadata is complete when it is not",
+        "Updates `wiki/index.md` and `log/log.md` only for real persistent additions"
+      ]
+    },
+    {
+      "id": 18,
+      "prompt": "A TeX paper project was added under `raw/papers/hydrate-model/` with `main.tex`, section files, figures, and a `.bib` file. Ingest it into the local wiki. Reconstruct the paper structure from TeX includes where possible, capture equations and figure/table context, and make source-note plus topic updates that remain traceable to the TeX bundle.",
+      "expected_output": "Handles TeX bundle ingestion as a scientific paper source bundle with reconstructed structure, citation awareness, figure/equation anchors, and local wiki integration.",
+      "files": [],
+      "expectations": [
+        "Treats the TeX directory as a source bundle rather than rewriting raw TeX files",
+        "Identifies entry files such as `main.tex`, included sections, figures, and bibliography files when present",
+        "Preserves important equations, figure/table captions, methods, and assumptions with source anchors",
+        "Creates or updates one stable source note for the paper bundle",
+        "Routes reusable concepts into topic or shared pages only when they improve navigation",
+        "Records missing assets, unresolved macros, incomplete bibliography, or compilation limitations as uncertainty",
+        "Does not require a graph backend or external citation manager to complete local ingest"
+      ]
+    },
+    {
+      "id": 19,
+      "prompt": "Re-ingest the same scientific paper source after I added a corrected PDF and updated `.bib` metadata. Update the local wiki safely: detect drift, preserve prior provenance, revise affected source/topic pages, and leave a clear review trail instead of creating duplicate paper pages.",
+      "expected_output": "Performs idempotent scientific-paper re-ingest with source drift tracking, stable page updates, uncertainty review, and duplicate avoidance.",
+      "files": [],
+      "expectations": [
+        "Detects that this is a re-ingest of an existing paper source or source bundle",
+        "Updates the existing paper source note instead of creating duplicate source pages",
+        "Records source drift such as changed file hash, corrected PDF, bibliography changes, or timestamp differences when available",
+        "Updates affected topic pages while preserving traceability to prior and current source evidence",
+        "Flags changed claims, corrected citations, or contradicted results for human review when unsafe to merge automatically",
+        "Appends an ingest log entry describing what changed",
+        "Keeps all changes inside the current working directory"
+      ]
     }
   ]
 }

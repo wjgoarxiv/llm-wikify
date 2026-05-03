@@ -76,6 +76,7 @@ That gives you a better default:
 - **Task-local wiki boundary** — the working directory is the wiki unless the user explicitly asks for something broader
 - **Bootstrap mode** — creates a small, MECE wiki structure when no wiki exists yet
 - **Ingest mode** — reads new materials from `raw/` and integrates them into source pages, topic pages, and indexes
+- **Scientific paper ingest mode** — ingests PDFs, TeX bundles, bibliography files, supplements, or converted paper Markdown and attempts to create structured paper source notes, topic updates, citation context, and local research maps; completeness depends on extraction quality and available metadata
 - **Maintenance mode** — audits stale pages, broken links, orphans, duplicates, and weak navigation
 - **Provenance-first workflow** — preserves where claims came from instead of turning source material into unsupported summary sludge
 - **Minimal structure bias** — creates only the folders and pages justified by the current project
@@ -85,6 +86,7 @@ That gives you a better default:
 - **Compound knowledge** — useful query answers can be filed back into the wiki instead of vanishing into chat history
 - **Bridge / promotion packets** — reusable local knowledge can be packaged for a global `llm-wiki` or cross-project map without silently breaking the local boundary
 - **Stronger health gates** — maintenance can check boundary, provenance, promotion, contradiction, taxonomy/schema drift, and source drift
+- **Optional research graph artifacts** — mature paper wikis can keep local `edges.jsonl`, `citations.jsonl`, `gaps.md`, `context.md`, or `.ingest-manifest.json` files without requiring an external graph backend
 
 ## When to Use
 
@@ -92,6 +94,7 @@ Use `llm-wikify` when you want to:
 
 - turn a repo or task directory into a persistent markdown knowledge base
 - ingest new source files, notes, URLs, exports, or transcripts into `raw/`
+- ingest scientific papers from PDF, TeX/LaTeX source bundles, bibliography files, supplements, or converted Markdown while attempting to preserve citations and provenance; completeness depends on extraction quality and source format
 - keep project understanding stable across sessions
 - maintain a small wiki for research, engineering, due diligence, planning, or documentation work
 - organize one large coherent domain into an umbrella map and cluster reading paths, when a flat topic list is no longer enough
@@ -134,6 +137,7 @@ Examples:
 
 - clipped articles
 - PDFs converted to markdown
+- scientific PDFs, TeX bundles, `.bib` files, and paper supplements
 - meeting notes
 - interview transcripts
 - copied docs
@@ -151,6 +155,11 @@ Bootstrap only the minimum structure we need.
 ```text
 Ingest the files in raw/ into this project wiki.
 Preserve provenance and avoid one giant dump page.
+```
+
+```text
+Ingest the scientific papers in raw/papers/ into this local wiki.
+Use paper source notes, preserve metadata/citations, connect reusable methods and open questions into topic pages, and do not rewrite raw files.
 ```
 
 ```text
@@ -192,6 +201,19 @@ When new material appears in `raw/`, the skill should:
 3. update related topic/entity pages
 4. mark uncertainty where evidence is weak or partial
 5. record the ingest in `log/log.md`
+
+### Scientific paper ingest
+
+When `raw/` contains research papers, the skill should:
+
+1. classify the source as PDF, TeX bundle, converted Markdown, bibliography, supplement, or mixed paper source
+2. use a safe extraction path when needed, such as MarkItDown, a paper-converter skill, direct TeX reading, or an existing Markdown conversion
+3. create or update one stable paper source note in `wiki/sources/`, using the paper template when available
+4. record extractable fields such as metadata, abstract, problem, method, assumptions, datasets, results, limitations, open questions, figures/tables, equations, and citation context; mark missing or uncertain items for review
+5. deduplicate before creating new topic/entity/shared pages, then update only durable reusable concepts or claims
+6. optionally maintain local research artifacts such as `wiki/graph/edges.jsonl`, `wiki/graph/citations.jsonl`, `wiki/gaps.md`, `wiki/context.md`, or `.ingest-manifest.json` when the wiki is large enough to benefit
+
+This mode is inspired by structured research-wiki patterns, but keeps `llm-wikify` local-first: no mandatory parser, no required graph backend, and no external/global writes without approval.
 
 ### Query
 
@@ -250,6 +272,7 @@ It should not pass maintenance by producing neat-looking indexes and reports wit
 ├── assets/
 │   ├── home-template.md
 │   ├── maintenance-report-template.md
+│   ├── paper-source-note-template.md
 │   ├── source-note-template.md
 │   └── wiki-rules-template.md
 └── evals/
@@ -301,6 +324,8 @@ log/
 
 Use this only when there are recurring sub-domains under the same local boundary. If a cluster has a different lifecycle, audience, privacy boundary, source stream, or maintenance owner, make it a separate project wiki or ask before reorganizing.
 
+Scientific paper wikis may additionally keep local-only research artifacts such as `wiki/graph/edges.jsonl`, `wiki/graph/citations.jsonl`, `wiki/gaps.md`, `wiki/context.md`, or `.ingest-manifest.json` when the paper corpus is large enough to benefit. These are maintained wiki outputs, not raw sources, and they are not part of the default starter structure.
+
 ## Design Principles
 
 ### 1. Local first
@@ -332,6 +357,7 @@ The repo includes pressure prompts in `evals/evals.json` covering the main failu
 - empty-folder starter-pack flow
 - bootstrap of a local wiki from a messy repo
 - ingest of mixed materials from `raw/`
+- scientific paper ingest for PDF/Markdown papers, TeX bundles, and idempotent re-ingest drift
 - maintenance without flattening the wiki into one file
 - bridge/export boundaries for cross-project synthesis
 - optional graph-lens deferral
